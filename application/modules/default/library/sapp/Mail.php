@@ -52,7 +52,7 @@ class sapp_Mail
         $smtpServer = "";
 		$config = array();
 
-		if(!empty($options['server_name']) && !empty($options['auth']) && !empty($options['port']) )
+		/*if(!empty($options['server_name']) && !empty($options['auth']) && !empty($options['port']) )
 		{
 			if( $options['auth'] == 'true' && !empty($options['username']) && !empty($options['password']))
 			{
@@ -105,7 +105,7 @@ class sapp_Mail
 					,'port' => MAIL_PORT
 			   );   
 			   $smtpServer = MAIL_SMTP;
-		}               
+		}          */     
 		
 		//end of sapplica mail configuration
 		return self::send_php_mail($config, $smtpServer, $imgsource, $options);
@@ -113,8 +113,8 @@ class sapp_Mail
 
 public static function _checkMail($options = array()) {
 		
-		$options['fromEmail'] = (!empty($options['fromEmail']))?$options['fromEmail']:SUPERADMIN_EMAIL;
-		$options['fromName'] = (!empty($options['fromName']))?$options['fromName']:DONOTREPLYNAME;
+		$options['fromEmail'] = (!empty($options['fromEmail'])) ? $options['fromEmail'] : SUPERADMIN_EMAIL;
+		$options['fromName'] = (!empty($options['fromName'])) ? $options['fromName'] : DONOTREPLYNAME;
 		
 		$orglogo = '';
 		$imgsource = '';$a = '';
@@ -132,6 +132,9 @@ public static function _checkMail($options = array()) {
 		$header="";
 		$footer="";
                 		
+		/*
+		 * commented out becaues we are not using smtp
+		 * 
 		if(!empty($options['server_name']) && !empty($options['auth']) && !empty($options['port']) )
 		{
 			if( $options['auth'] == 'true' && !empty($options['username']) && !empty($options['password']))
@@ -155,7 +158,7 @@ public static function _checkMail($options = array()) {
 				$config['tls'] = $options['tls'];
 			}
 			$smtpServer = $options['server_name'];
-		}
+		}*/
 		
 		//end of sapplica mail configuration
 		return self::send_php_mail($config, $smtpServer, $imgsource, $options);		
@@ -194,7 +197,8 @@ public static function _checkMail($options = array()) {
     	</div>';
 		
 	    $mail = new PHPMailer(); // create a new object
-	    $mail->isSMTP(); // enable SMTP
+	    $mail->isSendmail(); //we are using sendmail so we can comment out all that SMTP business
+	    /*$mail->isSMTP(); // enable SMTP
 	    $mail->SMTPDebug = 0; // debugging: 1 = errors and messages, 2 = messages only
 	    $mail->SMTPAuth = ($config['auth'] == 'true')?true:false;//$auth; // authentication enabled
 		if($config['tls'])
@@ -209,13 +213,16 @@ public static function _checkMail($options = array()) {
 		$mail->SMTPOptions = array('ssl' => array('verify_peer' => false,'verify_peer_name' => false,'allow_self_signed' => true));
 	
 	    $yahoo_smtp = strpos($config['username'], 'yahoo');
+    
 		if($yahoo_smtp !== false) {
 			//Fix for Yahoo SMTP configuration.
 			$mail->setFrom($config['username'],'Do not Reply');
 		} else {
 			$mail->setFrom($options['fromEmail'],$options['fromName']);
-		}
-		
+		}*/
+		 
+      error_log("\$options['fromEmail']: " . $options['fromEmail'] . ", \$options['fromName']: " . $options['fromName']);
+		  $mail->setFrom($options['fromEmail'],$options['fromName']);
 	    $mail->Subject = $options['subject'];
 	    $mail->msgHTML($htmlcontentdata);
 	    $mail->addAddress($options['toEmail'], $options['toName']);
